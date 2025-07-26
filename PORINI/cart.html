@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Cart | Porini Nomad</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./styles/biz.css">
+  <link rel="stylesheet" href="./styles/cart.css">
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="container">
+      <nav class="navbar">
+        <a href="index.html" class="logo">
+          <img src="./images/IMG-20250714-WA0048.jpg" alt="Porini Nomads Logo" />
+          Porini<span>Nomads</span>
+        </a>
+        <button class="mobile-menu-btn">
+          <i class="fas fa-bars"></i>
+        </button>
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="tours.html">Tours</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+          <li><a href="biz.html">Shop</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Cart Section -->
+  <section class="cart-container">
+    <div class="container">
+      <h2>Your Shopping Cart</h2>
+      
+      <div id="cart-items-container">
+        <!-- Cart items will be dynamically inserted here -->
+      </div>
+      
+      <div id="cart-summary-container">
+        <!-- Cart summary will be dynamically inserted here -->
+      </div>
+      
+      <div class="cart-buttons">
+        <a href="biz.html" class="btn btn-continue">Continue Shopping</a>
+        <a href="order.html" class="btn btn-checkout">Proceed to Checkout</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <!-- ... (your existing footer) ... -->
+  </footer>
+
+  <script>
+    // Mobile Menu Toggle
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+      const cartItemsContainer = document.getElementById('cart-items-container');
+      const cartSummaryContainer = document.getElementById('cart-summary-container');
+      const navCartCount = document.querySelector('.nav-cart-count');
+      
+      // Update cart count in header
+      navCartCount.textContent = cartItems.reduce((total, item) => total + item.quantity, 0);
+      
+      if (cartItems.length === 0) {
+        cartItemsContainer.innerHTML = `
+          <div class="empty-cart">
+            <i class="fas fa-shopping-cart"></i>
+            <h3>Your cart is empty</h3>
+            <p>Looks like you haven't added any items to your cart yet</p>
+            <a href="biz.html" class="btn">Browse Products</a>
+          </div>
+        `;
+        cartSummaryContainer.innerHTML = '';
+        document.querySelector('.cart-buttons').style.display = 'none';
+        return;
+      }
+      
+      // Render cart items
+      cartItemsContainer.innerHTML = cartItems.map((item, index) => `
+        <div class="cart-item" data-index="${index}">
+          <img src="${item.image}" alt="${item.name}" class="cart-item-image">
+          <div class="cart-item-details">
+            <h3 class="cart-item-title">${item.name}</h3>
+            <div class="cart-item-price">$${item.price.toFixed(2)}${item.type === 'gear' ? '/week' : ''}</div>
+            ${item.variant ? `<div class="cart-item-variant">Option: ${item.variant}</div>` : ''}
+            <div class="cart-item-actions">
+              <div class="quantity-selector">
+                <button class="quantity-btn minus-btn">-</button>
+                <input type="number" min="1" value="${item.quantity}" class="quantity-input">
+                <button class="quantity-btn plus-btn">+</button>
+              </div>
+              <button class="remove-btn">
+                <i class="fas fa-trash"></i> Remove
+              </button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+      
+      // Calculate totals
+      const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      const tax = subtotal * 0.08;
+      const shipping = subtotal > 100 ? 0 : 9.99;
+      const total = subtotal + tax + shipping;
+      
+      // Render cart summary
+      cartSummaryContainer.innerHTML = `
+        <div class="cart-summary">
+          <div class="summary-row">
+            <span>Subtotal</span>
+            <span>$${subtotal.toFixed(2)}</span>
+          </div>
+          <div class="summary-row">
+            <span>Tax (8%)</span>
+            <span>$${tax.toFixed(2)}</span>
+          </div>
+          <div class="summary-row">
+            <span>Shipping</span>
+            <span>${shipping === 0 ? 'FREE' : '$' + shipping.toFixed(2)}</span>
+          </div>
+          <div class="summary-row total">
+            <span>Total</span>
+            <span>$${total.toFixed(2)}</span>
+          </div>
+        </div>
+      `;
+      
+      // Add event listeners
+      document.querySelectorAll('.minus-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const index = this.closest('.cart-item').dataset.index;
+          updateQuantity(index, -1);
+        });
+      });
+      
+      document.querySelectorAll('.plus-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const index = this.closest('.cart-item').dataset.index;
+          updateQuantity(index, 1);
+        });
+      });
+      
+      document.querySelectorAll('.quantity-input').forEach(input => {
+        input.addEventListener('change', function() {
+          const index = this.closest('.cart-item').dataset.index;
+          const newQuantity = parseInt(this.value) || 1;
+          updateQuantity(index, 0, newQuantity);
+        });
+      });
+      
+      document.querySelectorAll('.remove-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const index = this.closest('.cart-item').dataset.index;
+          removeItem(index);
+        });
+      });
+    });
+    
+    function updateQuantity(index, change, newQuantity = null) {
+      const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+      
+      if (newQuantity !== null) {
+        cartItems[index].quantity = Math.max(1, newQuantity);
+      } else {
+        cartItems[index].quantity = Math.max(1, cartItems[index].quantity + change);
+      }
+      
+      localStorage.setItem('cartItems', JSON.stringify(cartItems));
+      location.reload();
+    }
+    
+    function removeItem(index) {
+      const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+      cartItems.splice(index, 1);
+      localStorage.setItem('cartItems', JSON.stringify(cartItems));
+      location.reload();
+    }
+  </script>
+</body>
+</html>

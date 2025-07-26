@@ -1,0 +1,256 @@
+
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #5e452b;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            color: #5e452b;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .hero {
+            background: url('https://images.unsplash.com/photo-1631635589499-afd87d52bf64?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGNhbXBpbmd8ZW58MHx8MHx8fDA%3D0') no-repeat center center/cover;
+            color: white;
+            padding: 8rem 1rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .hero-content {
+            position: relative;
+            max-width: 800px;
+            margin: auto;
+            z-index: 2;
+        }
+
+        .hero-content h1 {
+            color: white;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background-color: #a67c52;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            margin: 0 0.5rem;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #8b6a41;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: #a67c52;
+            border: 2px solid #a67c52;
+        }
+
+        .btn-outline:hover {
+            background-color: #a67c52;
+            color: white;
+        }
+
+        section {
+            padding: 4rem 1rem;
+        }
+
+        .about-content, .contact-container, .booking-form, .tours-grid, .testimonials-container, .blog-grid, .faq-container, .footer-content {
+            display: grid;
+            gap: 2rem;
+        }
+
+        .about-content {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            align-items: center;
+        }
+
+        .about-image img {
+            width: 100%;
+            border-radius: 10px;
+        }
+
+        .tours-grid, .blog-grid {
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        }
+
+        .tour-card, .blog-card {
+            background-color: #fdf8f3;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+
+        .tour-image img, .blog-image img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .tour-content, .blog-content {
+            padding: 1rem;
+        }
+
+        .tour-meta span, .blog-meta span {
+            display: inline-block;
+            margin-right: 1rem;
+            color: #80694e;
+        }
+
+        .tour-price {
+            font-weight: bold;
+            color: #5e452b;
+            margin: 1rem 0;
+        }
+
+        .testimonial {
+            background: #f5f1e6;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .testimonial-content {
+            font-style: italic;
+            margin-bottom: 1rem;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .testimonial-author img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        /* FAQ Section */
+#faq {
+    background-color: #fefcf9;
+    padding: 4rem 1rem;
+    color: #3e2f20;
+}
+
+#faq .container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+#faq .section-title {
+    text-align: center;
+    font-size: 2.5rem;
+    color: #5e452b;
+    margin-bottom: 2rem;
+}
+
+.faq-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.faq-item {
+    background-color: #fffaf3;
+    border: 1px solid #e2d6c5;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.faq-question {
+    font-weight: 600;
+    padding: 1rem 1.5rem;
+    font-size: 1.1rem;
+    cursor: pointer;
+    background-color: #f6eee3;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #4b3827;
+    transition: background-color 0.3s ease;
+}
+
+.faq-question:hover {
+    background-color: #f2e4d2;
+}
+
+.faq-question i {
+    transition: transform 0.3s ease;
+}
+
+.faq-answer {
+    padding: 1rem 1.5rem;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #5c4b37;
+    display: none;
+    background-color: #fff;
+}
+
+.faq-answer.open {
+    display: block;
+}
+
+/* Toggle icon rotation (optional JS-driven) */
+.faq-question.active i {
+    transform: rotate(180deg);
+}
+
+
+
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+          display: block;
+        }
+        
+        .nav-links {
+          position: fixed;
+          top: 80px;
+          left: 0;
+          right: 0;
+          background: rgba(255, 255, 255, 0.95);
+          flex-direction: column;
+          align-items: center;
+          padding: 30px 0;
+          box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+          clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+          transition: clip-path 0.4s ease;
+        }
+        
+        .nav-links.active {
+          clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+        }
+        
+        .nav-links li {
+          margin: 20px 0;
+        }
+        }

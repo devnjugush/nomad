@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Porini Nomad | Photo Gallery</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Poppins', sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      }
+
+      .container {
+        width: 90%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 15px;
+      }
+
+      .text-center {
+        text-align: center;
+      }
+
+      /* Header styles */
+      header {
+        background-color: rgba(255, 255, 255, 0.95);
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        backdrop-filter: blur(5px);
+      }
+
+      .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 0;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        font-family: 'Playfair Display', serif;
+        font-size: 24px;
+        font-weight: 700;
+        color: #2c3e50;
+      }
+
+      .logo img {
+        height: 40px;
+        margin-right: 10px;
+        border-radius: 50%;
+      }
+
+      .logo span {
+        color: #e67e22;
+      }
+
+      .nav-links {
+        display: flex;
+        list-style: none;
+      }
+
+      .nav-links li {
+        margin-left: 30px;
+      }
+
+      .nav-links a {
+        text-decoration: none;
+        color: #2c3e50;
+        font-weight: 500;
+        transition: color 0.3s;
+        position: relative;
+        padding: 5px 0;
+      }
+
+      .nav-links a:hover {
+        color: #e67e22;
+      }
+
+      .nav-links a::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: #e67e22;
+        transition: width 0.3s ease;
+      }
+
+      .nav-links a:hover::after {
+        width: 100%;
+      }
+
+      .mobile-menu-btn {
+        display: none;
+        background: none;
+        border: none;
+        font-size: 24px;
+        color: #2c3e50;
+        cursor: pointer;
+      }
+
+      /* Gallery Section */
+      .gallery-header {
+        text-align: center;
+        padding: 80px 0 40px;
+      }
+
+      .gallery-header h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: 3.5rem;
+        color: #2c3e50;
+        margin-bottom: 20px;
+        letter-spacing: 1px;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+      }
+
+      .gallery-header p {
+        max-width: 800px;
+        margin: 0 auto;
+        color: #555;
+        font-size: 1.1rem;
+        line-height: 1.8;
+      }
+
+      .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 25px;
+        margin-bottom: 60px;
+      }
+
+      .gallery-item {
+        position: relative;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        height: 300px;
+        cursor: pointer;
+      }
+
+      .gallery-item:hover {
+        transform: translateY(-10px) scale(1.03);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.18);
+      }
+
+      .gallery-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+      }
+
+      .gallery-item:hover img {
+        transform: scale(1.1);
+      }
+
+      .gallery-like {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: rgba(255, 255, 255, 0.9);
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        z-index: 2;
+      }
+
+      .gallery-like:hover {
+        background: rgba(230, 126, 34, 0.9);
+        transform: scale(1.1);
+      }
+
+      .gallery-like i {
+        color: #e74c3c;
+        font-size: 18px;
+        transition: color 0.3s;
+      }
+
+      .gallery-like:hover i {
+        color: white;
+      }
+
+      .gallery-likes-count {
+        position: absolute;
+        bottom: 15px;
+        right: 15px;
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        z-index: 2;
+      }
+
+      .gallery-likes-count i {
+        color: #e74c3c;
+        margin-right: 5px;
+      }
+
+      .gallery-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.85), transparent);
+        padding: 25px 20px;
+        color: white;
+        transform: translateY(100%);
+        transition: transform 0.4s ease;
+      }
+
+      .gallery-item:hover .gallery-overlay {
+        transform: translateY(0);
+      }
+
+      .gallery-overlay h3 {
+        font-size: 1.4rem;
+        margin-bottom: 8px;
+        font-weight: 600;
+      }
+
+      .gallery-overlay p {
+        font-size: 0.9rem;
+        opacity: 0.85;
+        line-height: 1.6;
+      }
+
+ 
+
+      .section-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 2.8rem;
+        color: #2c3e50;
+        text-align: center;
+        margin-bottom: 25px;
+        position: relative;
+      }
+
+      .section-title::after {
+        content: '';
+        display: block;
+        width: 100px;
+        height: 4px;
+        background: #e67e22;
+        margin: 20px auto;
+        border-radius: 2px;
+      }
+
+
+      /* Footer */
+      footer {
+        background: linear-gradient(to bottom, #2c3e50, #1a2530);
+        color: #ecf0f1;
+        padding: 80px 0 30px;
+        position: relative;
+      }
+
+      .footer-content {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 40px;
+        margin-bottom: 50px;
+      }
+
+      .footer-about {
+        padding-right: 20px;
+      }
+
+      .footer-logo {
+        font-family: 'Playfair Display', serif;
+        font-size: 2.2rem;
+        font-weight: 700;
+        margin-bottom: 25px;
+        color: #fff;
+      }
+
+      .footer-about p {
+        margin-bottom: 25px;
+        line-height: 1.8;
+        color: #bdc3c7;
+      }
+
+      .social-links {
+        display: flex;
+        gap: 15px;
+      }
+
+      .social-links a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 45px;
+        height: 45px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        color: #fff;
+        transition: all 0.3s ease;
+        font-size: 18px;
+      }
+
+      .social-links a:hover {
+        background: #e67e22;
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(230, 126, 34, 0.4);
+      }
+
+      .footer-links h4 {
+        font-size: 1.4rem;
+        margin-bottom: 25px;
+        position: relative;
+        padding-bottom: 12px;
+        color: #fff;
+      }
+
+      .footer-links h4::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 50px;
+        height: 3px;
+        background: #e67e22;
+        border-radius: 3px;
+      }
+
+      .footer-links ul {
+        list-style: none;
+      }
+
+      .footer-links ul li {
+        margin-bottom: 15px;
+      }
+
+      .footer-links ul li a {
+        color: #bdc3c7;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-block;
+      }
+
+      .footer-links ul li a:hover {
+        color: #e67e22;
+        padding-left: 8px;
+      }
+
+      .contact-info li {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 20px;
+        color: #bdc3c7;
+        line-height: 1.6;
+      }
+
+      .contact-info li i {
+        color: #e67e22;
+        margin-right: 15px;
+        min-width: 20px;
+        font-size: 18px;
+        margin-top: 5px;
+      }
+
+      .copyright {
+        text-align: center;
+        padding-top: 30px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        color: #bdc3c7;
+        font-size: 1rem;
+      }
+
+      .copyright i {
+        color: #e74c3c;
+        margin: 0 5px;
+      }
+
+      /* Notification */
+      .favorites-notification {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        background: rgba(46, 204, 113, 0.9);
+        color: white;
+        padding: 15px 25px;
+        border-radius: 50px;
+        display: flex;
+        align-items: center;
+        font-weight: 500;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .favorites-notification i {
+        margin-right: 10px;
+        font-size: 20px;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 992px) {
+        .gallery-header h1 {
+          font-size: 2.8rem;
+        }
+        
+        .section-title {
+          font-size: 2.4rem;
+        }
+        
+        .video-container {
+          gap: 30px;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .mobile-menu-btn {
+          display: block;
+        }
+        
+        .nav-links {
+          position: fixed;
+          top: 80px;
+          left: 0;
+          right: 0;
+          background: #fff;
+          flex-direction: column;
+          align-items: center;
+          padding: 30px 0;
+          box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+          clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+          transition: clip-path 0.4s ease;
+        }
+        
+        .nav-links.active {
+          clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+        }
+        
+        .nav-links li {
+          margin: 20px 0;
+        }
+        
+        .gallery-grid {
+          grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        }
+        
+        .gallery-header {
+          padding: 60px 0 30px;
+        }
+        
+        .gallery-header h1 {
+          font-size: 2.4rem;
+        }
+        
+        .section-title {
+          font-size: 2rem;
+        }
+        
+      }
+
+      @media (max-width: 480px) {
+        .gallery-header h1 {
+          font-size: 2rem;
+        }
+        
+        .section-title {
+          font-size: 1.8rem;
+        }
+        
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <nav class="navbar">
+          <a href="index.html" class="logo">
+            <img
+              src="images/IMG-20250714-WA0048.jpg"
+              alt="Porini Nomads Logo"
+            />
+            Porini<span>Nomads</span>
+          </a>
+          <button class="mobile-menu-btn">
+            <i class="fas fa-bars"></i>
+          </button>
+          <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="tour.html">Tours</a></li>
+            <li><a href="#">Gallery</a></li>
+            <li><a href="biz.html">Shop</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Gallery Section -->
+    <section class="gallery">
+      <div class="container">
+        <div class="gallery-header">
+          <h1>Our Memories</h1>
+          <p>
+            Immerse yourself in the breathtaking landscapes and unforgettable
+            experiences captured by our travelers and guides. Each image tells a
+            story of adventure and connection with nature.
+          </p>
+        </div>
+
+        <div class="gallery-grid">
+          <!-- Desert Images -->
+          <div class="gallery-item" data-category="desert" data-likes="24">
+            <img
+              src="https://plus.unsplash.com/premium_photo-1669047668443-4789192d329c?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8Y2FtcGluZyUyMHBpY3N8ZW58MHx8MHx8fDA%3D"
+              alt="Desert camping at sunset"
+            />
+            <div class="gallery-like"><i class="far fa-heart"></i></div>
+            <div class="gallery-likes-count">
+              <i class="fas fa-heart"></i> 24
+            </div>
+            <div class="gallery-overlay">
+              <h3>Desert Sunset</h3>
+            </div>
+          </div>
+
+          <div class="gallery-item" data-category="desert" data-likes="18">
+            <img
+              src="https://images.unsplash.com/photo-1453060590797-2d5f419b54cb?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fGNhbXBpbmclMjBwaWNzfGVufDB8fDB8fHww"
+              alt="Desert camp at night"
+            />
+            <div class="gallery-like"><i class="far fa-heart"></i></div>
+            <div class="gallery-likes-count">
+              <i class="fas fa-heart"></i> 18
+            </div>
+            <div class="gallery-overlay">
+              <h3>Night in the Desert</h3>
+            </div>
+          </div>
+
+          <!-- Mountain Images -->
+          <div class="gallery-item" data-category="mountain" data-likes="32">
+            <img
+              src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
+              alt="Mountain Sunrise"
+            />
+            <div class="gallery-like"><i class="far fa-heart"></i></div>
+            <div class="gallery-likes-count">
+              <i class="fas fa-heart"></i> 32
+            </div>
+            <div class="gallery-overlay">
+              <h3>Mountain Sunrise</h3>
+            </div>
+          </div>
+
+          <div class="gallery-item" data-category="mountain" data-likes="28">
+            <img
+              src="https://images.unsplash.com/photo-1501761095094-94d36f57edbb?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjB8fGFkdmVudHVyZXxlbnwwfHwwfHx8MA%3D%3D"
+              alt="Mountain trekking"
+            />
+            <div class="gallery-like"><i class="far fa-heart"></i></div>
+            <div class="gallery-likes-count">
+              <i class="fas fa-heart"></i> 28
+            </div>
+            <div class="gallery-overlay">
+              <h3>Alpine Trek</h3>
+            </div>
+          </div>
+
+          <!-- Coastal Images -->
+          <div class="gallery-item" data-category="coastal" data-likes="21">
+            <img
+              src="https://images.stockcake.com/public/1/7/a/17aa21f3-e893-49b7-87e1-9d0df5b73010_medium/moonlit-beach-camping-stockcake.jpg"
+              alt="Coastal camping"
+            />
+            <div class="gallery-like"><i class="far fa-heart"></i></div>
+            <div class="gallery-likes-count">
+              <i class="fas fa-heart"></i> 21
+            </div>
+            <div class="gallery-overlay">
+              <h3>Coastal Retreat</h3>
+            </div>
+          </div>
+          
+          <div class="gallery-item" data-category="coastal" data-likes="26">
+            <img
+              src="https://images.unsplash.com/photo-1675259447491-2fc3f5bcd9ea?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8emlwJTIwbGluaW5nfGVufDB8fDB8fHww"
+              alt="Coastal sunset"
+            />
+            <div class="gallery-like"><i class="far fa-heart"></i></div>
+            <div class="gallery-likes-count">
+              <i class="fas fa-heart"></i> 26
+            </div>
+            <div class="gallery-overlay">
+              <h3>Ocean Sunset</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+
+    <!-- Footer -->
+    <footer>
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-about">
+            <div class="footer-logo">Porini Nomads</div>
+            <p>
+              Guiding transformative wilderness journeys that reconnect you with
+              the earth and awaken your nomadic spirit.
+            </p>
+            <div class="social-links">
+              <a
+                href="https://www.instagram.com/porini_nomads?igsh=dGV3b2U4dGl2MTZo"
+                ><i class="fab fa-instagram"></i
+              ></a>
+              <a
+                href="https://www.tiktok.com/@porini_nomads?_t=ZM-8yLegGuyGaw&_r=1"
+                ><i class="fab fa-tiktok"></i
+              ></a>
+            </div>
+          </div>
+          </div>
+
+          <div class="footer-links">
+            <h4>Journeys</h4>
+            <ul>
+              <li><a href="#">Desert Expeditions</a></li>
+              <li><a href="#">Mountain Treks</a></li>
+              <li><a href="#">Coastal Adventures</a></li>
+              <li><a href="#">Forest Immersions</a></li>
+              <li><a href="#">Cultural Nomadism</a></li>
+              <li><a href="#">All Journeys</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-links">
+            <h4>Resources</h4>
+            <ul>
+              <li><a href="#">Preparation Guide</a></li>
+              <li><a href="#">Nomad Blog</a></li>
+              <li><a href="#">FAQ</a></li>
+              <li><a href="#">Gear Recommendations</a></li>
+              <li><a href="#">Photo Gallery</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-links">
+            <h4>Contact Us</h4>
+            <ul class="contact-info">
+              <li>
+                <i class="fas fa-map-marker-alt"></i> Diani Beach $ Kilifi Town
+                Kwale
+              </li>
+              <li><i class="fas fa-phone"></i> +2547 350 00067</li>
+              <li><i class="fas fa-envelope"></i> info.porini.nomads@gmail.com</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="copyright">
+          <p>
+            &copy; 2025 Porini Nomad. All rights reserved.
+          </p>
+        </div>
+      </div>
+    </footer>
+    
+    <script>
+      // Mobile menu toggle
+      document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
+        document.querySelector('.nav-links').classList.toggle('active');
+      });
+      
+      // Like functionality
+      document.querySelectorAll('.gallery-like').forEach(likeBtn => {
+        likeBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          const heartIcon = this.querySelector('i');
+          const item = this.closest('.gallery-item');
+          const likesCount = item.querySelector('.gallery-likes-count');
+          let likes = parseInt(item.dataset.likes);
+          
+          if (heartIcon.classList.contains('far')) {
+            heartIcon.classList.remove('far');
+            heartIcon.classList.add('fas');
+            likes++;
+            item.dataset.likes = likes;
+            likesCount.innerHTML = `<i class="fas fa-heart"></i> ${likes}`;
+            
+            // Show notification
+            const notification = document.createElement('div');
+            notification.className = 'favorites-notification';
+            notification.innerHTML = '<i class="fas fa-heart"></i> <span>Image added to favorites!</span>';
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+              notification.style.opacity = '1';
+            }, 10);
+            
+            setTimeout(() => {
+              notification.style.opacity = '0';
+              setTimeout(() => {
+                document.body.removeChild(notification);
+              }, 300);
+            }, 3000);
+          } else {
+            heartIcon.classList.remove('fas');
+            heartIcon.classList.add('far');
+            likes--;
+            item.dataset.likes = likes;
+            likesCount.innerHTML = `<i class="fas fa-heart"></i> ${likes}`;
+          }
+        });
+      });
+    
+    </script>
+  </body>
+</html>
